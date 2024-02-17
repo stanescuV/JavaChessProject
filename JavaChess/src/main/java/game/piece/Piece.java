@@ -6,20 +6,25 @@ import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import game.Type;
 
 import static game.Board.HALF_SQUARE_SIZE;
 import static game.Board.SQUARE_SIZE;
 
 
 public class Piece {
+    public Type type;
+
     public BufferedImage image;
     public int x,y;
     public int col, row, preCol, preRow;
-    public PieceColor color;
+//    public PieceColor color;
+    public int color;
     public Piece hittingP;
+    public boolean moved, twoStepped;
 
     public Piece(int color, int col, int row){
-        this.color = PieceColor.fromValue(color);
+        this.color = color;
         this.col = col;
         this.row = row;
         x = getX(col);
@@ -64,10 +69,18 @@ public class Piece {
     }
 
     public void updatePosition(){
+
+        // to check en passant
+        if(type == Type.PAWN){
+            if(Math.abs(row-preRow) == 2){
+                twoStepped = true;
+            }
+        }
         x = getX(col);
         y = getY(row);
         preCol = getCol(x);
         preRow = getRow(y);
+        moved = true;
     }
 
     public void resetPosition(){
